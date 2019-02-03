@@ -1,0 +1,18 @@
+[package]
+name = "color_bruteforcer"
+version = "1.0.0"
+authors = ["Torsten Ostgard"]
+license = "MIT"
+
+[[bin]]
+doc = false
+path = "src/main.rs"
+name = "color_bruteforcer"
+
+[dependencies]
+clap = "2.32"
+palette = "0.4"
+pbr = "1.0"
+promptly = "0.1"
+rayon = "1.0"
+regex = "1.0"
