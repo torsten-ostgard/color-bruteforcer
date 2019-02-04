@@ -2,19 +2,8 @@ environment:
   global:
     PROJECT_NAME: color_bruteforcer
   matrix:
-    # Nightly channel
-    - TARGET: x86_64-pc-windows-gnu
-      CHANNEL: nightly
-    - TARGET: x86_64-pc-windows-msvc
-      CHANNEL: nightly
-
-    # Beta channel
-    - TARGET: x86_64-pc-windows-gnu
-      CHANNEL: beta
-    - TARGET: x86_64-pc-windows-msvc
-      CHANNEL: beta
-
     # Stable channel
+    # Skip beta and nightly for the sake of speed, since AppVeyor runs jobs sequentially.
     - TARGET: x86_64-pc-windows-gnu
       CHANNEL: stable
     - TARGET: x86_64-pc-windows-msvc
