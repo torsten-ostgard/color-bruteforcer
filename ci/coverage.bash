@@ -2,19 +2,6 @@
 
 set -ex
 
-build_kcov() {
-    wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
-    tar xzf master.tar.gz
-    cd kcov-master
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install
-    cd ../..
-    rm -rf kcov-master
-}
-
 upload_coverage() {
     for file in $(ls target/x86_64-unknown-linux-gnu/debug/color_bruteforcer-* | grep -v "\.d"); do
         mkdir -p "target/cov/$(basename $file)";
@@ -25,7 +12,6 @@ upload_coverage() {
 }
 
 main() {
-    build_kcov
     upload_coverage
 }
 
