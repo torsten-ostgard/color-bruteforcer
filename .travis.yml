@@ -46,12 +46,6 @@ matrix:
         - cargo fmt -- --check
         - cargo clippy
 
-    # Code coverage
-    - os: linux
-      rust: stable
-      script:
-        - bash ci/coverage.bash
-
 sudo: required
 
 env:
@@ -69,6 +63,9 @@ install:
 script:
   - cargo build --target "$TARGET" --verbose
   - RAYON_NUM_THREADS=4 cargo test --target "$TARGET" --verbose
+  - if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_RUST_VERSION" == "stable" ]]; then
+        bash ci/coverage.bash;
+    fi
 
 before_deploy:
   - bash ci/before_deploy.bash
