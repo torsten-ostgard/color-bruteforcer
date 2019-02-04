@@ -11,5 +11,3 @@ cmake ..
 make
 sudo make install
 cd ../..
-echo $PATH
-ls /usr/local/bin
