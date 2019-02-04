@@ -46,6 +46,12 @@ matrix:
         - cargo fmt -- --check
         - cargo clippy
 
+    # Code coverage
+    - os: linux
+      rust: stable
+      script:
+        - bash ci/coverage.bash
+
 sudo: required
 
 env:
