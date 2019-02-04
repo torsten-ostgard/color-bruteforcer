@@ -11,4 +11,5 @@ cmake ..
 make
 sudo make install
 cd ../..
-rm -rf kcov-master
+echo $PATH
+ls /usr/local/bin
