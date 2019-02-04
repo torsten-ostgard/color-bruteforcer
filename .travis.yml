@@ -56,8 +56,19 @@ env:
     # Used on the deployment script
     - PROJECT_NAME=color_bruteforcer
 
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+      - gcc
+      - binutils-dev
+
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" && "$TRAVIS_RUST_VERSION" == "stable" ]]; then
+        sudo apt-get update;
         bash ci/install_kcov.bash;
     fi
 
