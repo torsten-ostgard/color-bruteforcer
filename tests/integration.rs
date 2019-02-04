@@ -1,11 +1,26 @@
 #[cfg(test)]
 mod tests {
     const BASE_NUM_LINES: usize = 3;
+    use std::env;
+    use std::path::Path;
     use std::process::{Command, Stdio};
+
+    fn get_path() -> String {
+        let dir = match env::var("TARGET") {
+            Ok(target) => target,
+            Err(_e) => "".to_string(),
+        };
+        let executable = Path::new("target")
+            .join(dir)
+            .join("debug")
+            .join("color_bruteforcer");
+
+        executable.to_str().unwrap().to_string()
+    }
 
     #[test]
     fn test_no_results() {
-        let output = Command::new("./target/debug/color_bruteforcer")
+        let output = Command::new(get_path())
             .arg("--alpha-min=1")
             .arg("--alpha-max=1")
             .arg("--base-colors=#ffffff,#bfbfbf,#808080,#404040,#000000")
@@ -23,7 +38,7 @@ mod tests {
 
     #[test]
     fn test_has_results() {
-        let output = Command::new("./target/debug/color_bruteforcer")
+        let output = Command::new(get_path())
             .arg("--alpha-min=30")
             .arg("--alpha-max=30")
             .arg("--base-colors=#ffffff,#bfbfbf,#808080,#404040,#000000")
@@ -43,7 +58,7 @@ mod tests {
 
     #[test]
     fn test_alpha_conflict() {
-        let status = Command::new("./target/debug/color_bruteforcer")
+        let status = Command::new(get_path())
             .arg("--alpha-min=80")
             .arg("--alpha-max=70")
             .stderr(Stdio::null())
@@ -57,7 +72,7 @@ mod tests {
 
     #[test]
     fn test_get_colors_error() {
-        let status = Command::new("./target/debug/color_bruteforcer")
+        let status = Command::new(get_path())
             .arg("--base-colors=#FFFFFF,#001488")
             .arg("--target-colors=000000")
             .stderr(Stdio::null())
