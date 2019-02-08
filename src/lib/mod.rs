@@ -224,7 +224,7 @@ fn trim_color(color: &str) -> String {
 
 pub fn get_app() -> App<'static, 'static> {
     App::new("color_bruteforcer")
-        .version("0.1.0")
+        .version("1.1.0")
         .author("Torsten Ostgard")
         .about("Finds an unknown, semitransparent overlay color.")
         .arg(
