@@ -14,7 +14,9 @@ use promptly::prompt;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use regex::Regex;
 
+mod alpha_generator;
 mod color_distance;
+pub use self::alpha_generator::AlphaGenerator;
 
 pub const COLOR_REGEX: &str = r"^#?(([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2}))$";
 

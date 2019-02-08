@@ -11,7 +11,7 @@ use std::process::exit;
 use pbr::ProgressBar;
 
 pub mod lib;
-use lib::{get_app, get_colors, search_alpha, ColorResult};
+use lib::{get_app, get_colors, search_alpha, AlphaGenerator, ColorResult};
 
 fn main() {
     let arg_matches = get_app().get_matches();
@@ -33,16 +33,22 @@ fn main() {
     let mut color_results = Vec::new();
     let num_alphas = u64::from((alpha_max + 1) - alpha_min);
     let mut pb = ProgressBar::new(num_alphas);
+    pb.show_counter = false;
     pb.message("Found 0 possible colors ");
+    let mut alpha_generator = AlphaGenerator::new(alpha_min, alpha_max);
+    let mut previous_alpha_had_results = false;
 
-    for alpha_int in alpha_min..=alpha_max {
+    while let Some(alpha_int) = alpha_generator.next(previous_alpha_had_results) {
         let alpha = f32::from(alpha_int) / 100.0;
         let mut alpha_results = search_alpha(&base_colors, &target_colors, alpha, max_distance);
+        previous_alpha_had_results = !alpha_results.is_empty();
         color_results.append(&mut alpha_results);
         pb.inc();
         let message = format!("Found {} possible colors ", color_results.len());
         pb.message(message.as_str());
     }
+
+    pb.finish();
 
     if color_results.is_empty() {
         println!("\n\nNo results found.");
