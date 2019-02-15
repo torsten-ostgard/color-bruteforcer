@@ -25,7 +25,7 @@ mod alpha_generator;
 mod color_distance;
 pub use self::alpha_generator::AlphaGenerator;
 
-pub const COLOR_REGEX: &str = r"^#?(([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2}))$";
+const COLOR_REGEX: &str = r"^#?(([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2}))$";
 
 /// A color that produces the target colors when placed over the base colors.
 #[derive(Debug)]
