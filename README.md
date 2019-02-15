@@ -1,4 +1,11 @@
-# color_bruteforcer - Find an unknown overlay color
+# Color Bruteforcer
+## Find an unknown overlay color
+
+
+[![Build Status](https://api.travis-ci.org/torsten-ostgard/color-bruteforcer.svg?branch=master)](https://travis-ci.org/torsten-ostgard/color-bruteforcer)
+[![Build Status](https://ci.appveyor.com/api/projects/status/05o0elu69dy81qj8?svg=true)](https://ci.appveyor.com/project/torsten-ostgard/color-bruteforcer)
+[![Codecov](https://codecov.io/gh/torsten-ostgard/color-bruteforcer/branch/master/graph/badge.svg)](https://codecov.io/gh/torsten-ostgard/color-bruteforcer)
+[![Dependency Status](https://deps.rs/repo/github/torsten-ostgard/color-bruteforcer/status.svg)](https://deps.rs/repo/github/torsten-ostgard/color-bruteforcer)
 
 
 ## Introduction
