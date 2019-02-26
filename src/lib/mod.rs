@@ -38,7 +38,7 @@ pub struct ColorResult {
     /// The alpha value of the proposed overlay color.
     ///
     /// Stored separately to make it easy to produce a value between 1 and 99 in the display
-    /// formatter. A LinSrgba<u8> type, for example, would store 50% opacity as 127, leading to
+    /// formatter. A `LinSrgba<u8>` type, for example, would store 50% opacity as 127, leading to
     /// annoying and imprecise conversions for display purposes.
     pub alpha: u8,
     /// The mean of the color distances between the target colors and colors produced by placing
