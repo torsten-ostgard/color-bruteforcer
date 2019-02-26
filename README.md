@@ -9,7 +9,7 @@
 
 
 ## Introduction
-`color_bruteforcer` is a program that given a set of base colors C<sub>B</sub> and target colors C<sub>T</sub>, attempts to find the unknown overlay color C<sub>O</sub> at opacity &alpha; that, when overlayed on all elements of C<sub>B</sub>, produces the corresponding colors of C<sub>T</sub>. This is done by performing a bruteforce search on the entire RGB color space and alpha values from 1% to 99% opacity.
+`color_bruteforcer` is a program that given a set of base colors C<sub>B</sub> and target colors C<sub>T</sub>, attempts to find the unknown overlay color C<sub>O</sub> at opacity &alpha; that, when overlaid on all elements of C<sub>B</sub>, produces the corresponding colors of C<sub>T</sub>. This is done by performing a bruteforce search on the entire RGB color space and alpha values from 1% to 99% opacity.
 
 
 ## Example
