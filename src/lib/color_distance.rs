@@ -1,5 +1,3 @@
-extern crate palette;
-
 use palette::white_point::D65;
 use palette::Laba;
 
