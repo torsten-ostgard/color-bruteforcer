@@ -4,7 +4,7 @@
 //! when overlaid on all elements of C<sub>B</sub>, produces the corresponding colors of
 //! C<sub>T</sub>. This is done by performing a bruteforce search on the entire RGB color space and
 //! alpha values from 1% to 99% opacity.
-#![deny(missing_docs, rust_2018_idioms)]
+#![deny(missing_docs, nonstandard_style, unsafe_code, rust_2018_idioms)]
 use std::process::exit;
 
 use clap::value_t_or_exit;
