@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 
+/// Maintain the state necessary to generate alpha values in an intelligent manner.
 #[derive(Debug, Default)]
 pub struct AlphaGenerator {
     alpha_min: u8,
@@ -39,6 +40,7 @@ fn generate_initial_guesses(alpha_min: u8, alpha_max: u8) -> Vec<u8> {
 }
 
 impl AlphaGenerator {
+    /// Initialize a new alpha generator.
     pub fn new(alpha_min: u8, alpha_max: u8) -> Self {
         let mut a = AlphaGenerator::default();
         a.alpha_min = alpha_min;
@@ -54,6 +56,15 @@ impl AlphaGenerator {
         a
     }
 
+    /// Generate the next alpha value to be searched.
+    ///
+    /// The function first takes large steps away from the midpoint between the minimum and maximum
+    /// alpha values until a match is found. It alternates between alpha values higher and lower
+    /// than the midpoint. Once a match has been found, the function then generates alpha values
+    /// both higher and lower than the first match until no matches are found in both directions.
+    /// If somehow the large steps produce no matches, the step size changes to one and very alpha
+    /// value - excluding the ones already checked - are generated, again going outward from the
+    /// midpoint, alternating between values larger and smaller than the midpoint.
     pub fn next(&mut self, had_results: bool) -> Option<u8> {
         if had_results && self.first_hit.is_none() {
             self.first_hit = Some(self.previous_alpha);

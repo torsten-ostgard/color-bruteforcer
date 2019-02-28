@@ -10,6 +10,7 @@ use std::process::exit;
 
 use pbr::ProgressBar;
 
+#[deny(missing_docs)]
 pub mod lib;
 use lib::{get_app, get_colors, search_alpha, AlphaGenerator, ColorResult};
 

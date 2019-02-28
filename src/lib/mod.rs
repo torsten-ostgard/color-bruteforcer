@@ -1,3 +1,10 @@
+//! ## Introduction
+//! `color_bruteforcer` is a program that given a set of base colors C<sub>B</sub> and target colors
+//! C<sub>T</sub>, attempts to find the unknown overlay color C<sub>O</sub> at opacity &alpha; that,
+//! when overlaid on all elements of C<sub>B</sub>, produces the corresponding colors of
+//! C<sub>T</sub>. This is done by performing a bruteforce search on the entire RGB color space and
+//! alpha values from 1% to 99% opacity.
+
 extern crate clap;
 extern crate palette;
 extern crate promptly;
@@ -18,12 +25,24 @@ mod alpha_generator;
 mod color_distance;
 pub use self::alpha_generator::AlphaGenerator;
 
-pub const COLOR_REGEX: &str = r"^#?(([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2}))$";
+const COLOR_REGEX: &str = r"^#?(([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2}))$";
 
+/// A color that produces the target colors when placed over the base colors.
 #[derive(Debug)]
 pub struct ColorResult {
+    /// The overlay color that will produce the target colors when put on top of the base colors.
+    ///
+    /// Stored as integer values, since image editing programs like Photoshop use those instead of
+    /// floating point numbers.
     pub color: LinSrgb<u8>,
+    /// The alpha value of the proposed overlay color.
+    ///
+    /// Stored separately to make it easy to produce a value between 1 and 99 in the display
+    /// formatter. A `LinSrgba<u8>` type, for example, would store 50% opacity as 127, leading to
+    /// annoying and imprecise conversions for display purposes.
     pub alpha: u8,
+    /// The mean of the color distances between the target colors and colors produced by placing
+    /// this overlay color on top of the base colors.
     pub avg_distance: f32,
 }
 
@@ -37,6 +56,7 @@ impl fmt::Display for ColorResult {
     }
 }
 
+/// Search all of the RGB values with a certain alpha value for a matching overlay color.
 pub fn search_alpha(
     base_colors: &[LinSrgba],
     target_colors: &[Laba<D65>],
@@ -97,6 +117,7 @@ fn find_match(
     Some(result)
 }
 
+/// Get base and target colors from either command line arguments or `stdin`.
 pub fn get_colors<A, B>(arg_matches: ArgMatches) -> Result<(Vec<A>, Vec<B>), String>
 where
     A: From<LinSrgba>,
@@ -222,6 +243,7 @@ fn trim_color(color: &str) -> String {
     (if color.len() == 7 { &color[1..] } else { color }).to_string()
 }
 
+/// Return the application definition.
 pub fn get_app() -> App<'static, 'static> {
     App::new("color_bruteforcer")
         .version("1.1.0")

@@ -3,6 +3,7 @@ extern crate palette;
 use palette::white_point::D65;
 use palette::Laba;
 
+/// Calculates the perceptual color distance between two CIELAB colors.
 pub fn distance(lab1: &Laba<D65>, lab2: &Laba<D65>) -> f32 {
     // Adapted slightly from the Scarlet library. The original implementation can be found here:
     // https://github.com/nicholas-miklaucic/scarlet/blob/66bf96f/src/color.rs#L713
