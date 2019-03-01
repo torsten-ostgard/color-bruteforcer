@@ -1,16 +1,3 @@
-//! ## Introduction
-//! `color_bruteforcer` is a program that given a set of base colors C<sub>B</sub> and target colors
-//! C<sub>T</sub>, attempts to find the unknown overlay color C<sub>O</sub> at opacity &alpha; that,
-//! when overlaid on all elements of C<sub>B</sub>, produces the corresponding colors of
-//! C<sub>T</sub>. This is done by performing a bruteforce search on the entire RGB color space and
-//! alpha values from 1% to 99% opacity.
-
-extern crate clap;
-extern crate palette;
-extern crate promptly;
-extern crate rayon;
-extern crate regex;
-
 use std::env;
 use std::fmt;
 
@@ -47,7 +34,7 @@ pub struct ColorResult {
 }
 
 impl fmt::Display for ColorResult {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
             "#{:x} at {}% opacity; average distance: {:.6}",
@@ -118,7 +105,7 @@ fn find_match(
 }
 
 /// Get base and target colors from either command line arguments or `stdin`.
-pub fn get_colors<A, B>(arg_matches: ArgMatches) -> Result<(Vec<A>, Vec<B>), String>
+pub fn get_colors<A, B>(arg_matches: ArgMatches<'_>) -> Result<(Vec<A>, Vec<B>), String>
 where
     A: From<LinSrgba>,
     B: From<LinSrgba>,
