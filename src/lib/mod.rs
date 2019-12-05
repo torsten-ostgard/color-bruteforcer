@@ -1,5 +1,6 @@
 use std::env;
 use std::fmt;
+use std::string::ToString;
 
 use clap::{App, Arg, ArgMatches};
 use palette::white_point::D65;
@@ -61,8 +62,8 @@ pub fn search_alpha(
                     overlay.green = green as f32 / 255.0;
                     overlay.blue = blue as f32 / 255.0;
                     let result = find_match(base_colors, target_colors, overlay, max_distance);
-                    if result.is_some() {
-                        result_vector.push(result.unwrap());
+                    if let Some(value) = result {
+                        result_vector.push(value);
                     }
                 }
             }
@@ -129,12 +130,12 @@ where
             let base_colors: Vec<String> = arg_matches
                 .values_of("base_colors")
                 .unwrap()
-                .map(|color| color.to_string())
+                .map(ToString::to_string)
                 .collect();
             let target_colors: Vec<String> = arg_matches
                 .values_of("target_colors")
                 .unwrap()
-                .map(|color| color.to_string())
+                .map(ToString::to_string)
                 .collect();
             (base_colors, target_colors)
         } else {

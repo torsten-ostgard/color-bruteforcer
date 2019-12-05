@@ -89,9 +89,9 @@ impl AlphaGenerator {
 
         let alpha = self.guesses.pop();
 
-        if alpha.is_some() {
-            self.should_check[usize::from(alpha.unwrap() - 1)] = false;
-            self.previous_alpha = alpha.unwrap();
+        if let Some(a) = alpha {
+            self.should_check[usize::from(a - 1)] = false;
+            self.previous_alpha = a;
         }
 
         alpha
