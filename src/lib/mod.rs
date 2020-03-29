@@ -5,13 +5,15 @@ use std::string::ToString;
 use clap::{App, Arg, ArgMatches};
 use palette::white_point::D65;
 use palette::{Blend, IntoColor, Laba, LinSrgb, LinSrgba};
-use promptly::prompt;
+use promptly::{prompt_opt, ReadlineError};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use regex::Regex;
 
 mod alpha_generator;
 mod color_distance;
+mod error;
 pub use self::alpha_generator::AlphaGenerator;
+pub use error::GetColorError;
 
 const COLOR_REGEX: &str = r"^#?(([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2}))$";
 
@@ -106,7 +108,7 @@ fn find_match(
 }
 
 /// Get base and target colors from either command line arguments or `stdin`.
-pub fn get_colors<A, B>(arg_matches: ArgMatches<'_>) -> Result<(Vec<A>, Vec<B>), String>
+pub fn get_colors<A, B>(arg_matches: ArgMatches<'_>) -> Result<(Vec<A>, Vec<B>), GetColorError>
 where
     A: From<LinSrgba>,
     B: From<LinSrgba>,
@@ -123,8 +125,7 @@ where
                 .len();
 
             if num_base_colors != num_target_colors {
-                let err_msg = "The number of base colors and target colors must match.";
-                return Err(err_msg.to_string());
+                return Err(GetColorError::MismatchedColors);
             }
 
             let base_colors: Vec<String> = arg_matches
@@ -139,7 +140,7 @@ where
                 .collect();
             (base_colors, target_colors)
         } else {
-            get_colors_from_input()
+            get_colors_from_input()?
         };
 
     let base_colors = instantiate_colors(base_colors);
@@ -147,7 +148,7 @@ where
     Ok((base_colors, target_colors))
 }
 
-fn get_colors_from_input() -> (Vec<String>, Vec<String>) {
+fn get_colors_from_input() -> Result<(Vec<String>, Vec<String>), ReadlineError> {
     let mut base_colors: Vec<String> = Vec::new();
     let mut target_colors: Vec<String> = Vec::new();
     let mut iterations = 0;
@@ -165,9 +166,9 @@ fn get_colors_from_input() -> (Vec<String>, Vec<String>) {
         };
         let num_samples = (iterations / 2) + 1;
         let prompt_text = format!("Enter {} color #{}", color_type, num_samples);
-        let input: Option<String> = match env::var("USE_MOCK_PROMPT") {
+        let input = match env::var("USE_MOCK_PROMPT") {
             Ok(_val) => mock_prompt(raw_iterations),
-            Err(_e) => prompt(prompt_text),
+            Err(_e) => prompt_opt(prompt_text)?,
         };
 
         if input.is_none() {
@@ -205,7 +206,7 @@ fn get_colors_from_input() -> (Vec<String>, Vec<String>) {
         }
     }
 
-    (base_colors, target_colors)
+    Ok((base_colors, target_colors))
 }
 
 fn instantiate_colors<T>(colors: Vec<String>) -> Vec<T>
@@ -381,12 +382,12 @@ mod tests {
             "--base-colors=#FFFFFF",
             "--target-colors=000000",
         ]);
-        let expected_result = Ok((
+        let expected_result = (
             vec![LinSrgba::new(1.0, 1.0, 1.0, 1.0)],
             vec![LinSrgba::new(0.0, 0.0, 0.0, 1.0)],
-        ));
+        );
         let result = get_colors(arg_matches);
-        assert_eq!(expected_result, result);
+        assert_eq!(expected_result, result.unwrap());
     }
 
     #[test]
@@ -396,7 +397,7 @@ mod tests {
             "--base-colors=#FFFFFF,#001488",
             "--target-colors=000000",
         ]);
-        let result: Result<(Vec<LinSrgba>, Vec<LinSrgba>), String> = get_colors(arg_matches);
+        let result: Result<(Vec<LinSrgba>, Vec<LinSrgba>), GetColorError> = get_colors(arg_matches);
         assert!(result.is_err());
     }
 
@@ -404,13 +405,13 @@ mod tests {
     fn test_get_colors_from_stdin() {
         let arg_matches = ArgMatches::new();
         env::set_var("USE_MOCK_PROMPT", "true");
-        let result: Result<(Vec<LinSrgba>, Vec<LinSrgba>), String> = get_colors(arg_matches);
+        let result = get_colors(arg_matches);
         env::remove_var("USE_MOCK_PROMPT");
-        let expected_result = Ok((
+        let expected_result = (
             vec![LinSrgba::new(1.0, 1.0, 1.0, 1.0)],
             vec![LinSrgba::new(0.0, 0.0, 0.0, 1.0)],
-        ));
-        assert_eq!(expected_result, result);
+        );
+        assert_eq!(expected_result, result.unwrap());
     }
 
     #[test]

@@ -9,9 +9,10 @@ use std::process::exit;
 
 use clap::value_t_or_exit;
 use pbr::ProgressBar;
+use promptly::ReadlineError;
 
 mod lib;
-use lib::{get_app, get_colors, search_alpha, AlphaGenerator, ColorResult};
+use lib::{get_app, get_colors, search_alpha, AlphaGenerator, ColorResult, GetColorError};
 
 fn main() {
     let arg_matches = get_app().get_matches();
@@ -25,10 +26,22 @@ fn main() {
         exit(1);
     }
 
-    let (base_colors, target_colors) = get_colors(arg_matches).unwrap_or_else(|err| {
-        eprintln!("{}", err);
-        exit(1);
-    });
+    let (base_colors, target_colors) = match get_colors(arg_matches) {
+        Ok(val) => val,
+        Err(GetColorError::ReadlineError(err)) => {
+            match err {
+                // Do not print anything when the program is exited using Ctrl-C or Ctrl-D.
+                ReadlineError::Interrupted => (),
+                ReadlineError::Eof => (),
+                _ => eprintln!("{}", err),
+            }
+            exit(1);
+        }
+        Err(err) => {
+            eprintln!("{}", err);
+            exit(1);
+        }
+    };
 
     let mut color_results = Vec::new();
     let num_alphas = u64::from((alpha_max + 1) - alpha_min);
