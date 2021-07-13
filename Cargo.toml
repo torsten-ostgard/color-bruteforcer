@@ -12,7 +12,7 @@ name = "color_bruteforcer"
 
 [dependencies]
 clap = "2"
-palette = "0.5"
+palette = "0.6"
 pbr = "1"
 promptly = "0.3"
 rayon = "1"
